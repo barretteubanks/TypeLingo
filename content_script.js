@@ -34,9 +34,9 @@ function Update() {
     if (IsCorrectExercise() && !isTransformed && GetElementWithClass("PEm85") == null) {
         isTransformed = true;
         
-        currentWordBank = GetElementWithData('word-bank');
-    
         AddKeyboard();
+
+        currentWordBank = currentTextArea.parentElement.firstChild;
     
         WaitForElement("[data-test='player-next']").then((element) => {
             element.removeEventListener("click", (event) => CheckButton(event));
@@ -194,10 +194,9 @@ function AddKeyboard() {
     AppendStyleSheet("textarea-placeholder", styleSheetContent);
     
     newTextAreaDiv.appendChild(newTextArea);
-    // Put div inside the word bank and textarea parent
-    GetElementWithData('word-bank').parentElement.appendChild(newTextAreaDiv)
-            
-    newTextArea.addEventListener("input", () => { EnableCheck(newTextArea.value != ""); });
+    GetElementWithClass("Cld9f _32LPr _3hg-V").appendChild(newTextAreaDiv);
+    
+    newTextArea.addEventListener("input", () => EnableCheck(newTextArea.textContent != ""));
 
     currentTextArea = newTextAreaDiv;
     
@@ -236,22 +235,22 @@ function ToggleButtonClicked() {
         toggleButtonIcon.setAttribute("src", IsInLightMode() ? "https://d35aaqx5ub95lt.cloudfront.net/images/05087a35a607783111e11cb81d1fcd33.svg" : "https://d35aaqx5ub95lt.cloudfront.net/images/e786c05c2a908e9f919f51fb14fc950c.svg");
         toggleButtonText.textContent = "Use keyboard";
 
-        EnableCheck(GetElementWithClass("LhRk3 WOZnx _275sd _1ZefG notranslate _6Nozy _1O290 _2HRY_ _2N8UY _2mDNn") != null);
+        EnableCheck(addedWords.length > 0);
     }
 }
 
 function EnableCheck(value) {
     const checkButton = GetElementWithData("player-next");
-        
+    
     if (value == true) {
         // Enable check button
         checkButton.setAttribute("aria-disabled", "false");
-        checkButton.setAttribute("class", "_30qMV _2N_A5 _36Vd3 _16r-S _2orIw _3PphB _9C_ii");
+        checkButton.setAttribute("class", "_30qMV _2N_A5 _36Vd3 _16r-S _3_7Zn _3_W6w _2oGJR");
     }
     else {
         // Disable check button
         checkButton.setAttribute("aria-disabled", "true");
-        checkButton.setAttribute("class", "_33Jbm _30qMV _2N_A5 _36Vd3 _16r-S _2orIw _3PphB _9C_ii");
+        checkButton.setAttribute("class", "_33Jbm _30qMV _2N_A5 _36Vd3 _16r-S _3_7Zn _3_W6w _2oGJR");
     }
 }
 
@@ -264,7 +263,7 @@ function WarningSystem() {
     
     let wordBankWords = [];
     GetElementsWithData("challenge-tap-token-text").forEach(element => {
-        if (element.className != "_1rl91 WOZnx _275sd _1ZefG notranslate _6Nozy _1O290 _2HRY_ _2N8UY") { // Is not added word
+        if (element.className != "_3CBig _1N-oo _36Vd3 _16r-S notranslate _356DE _25kHK _3U5_i _3AiTr") { // Is not added word
             wordBankWords.push([element.textContent, element.parentElement]);
         }
     });
@@ -325,7 +324,7 @@ function KeyboardCheck() {
         
         let wordBankWords = [];
         GetElementsWithData("challenge-tap-token-text").forEach(element => {
-            if (element.className != "_1rl91 WOZnx _275sd _1ZefG notranslate _6Nozy _1O290 _2HRY_ _2N8UY") { // Is not added word
+            if (element.className != "_3CBig _1N-oo _36Vd3 _16r-S notranslate _356DE _25kHK _3U5_i _3AiTr") { // Is not added word
                 wordBankWords.push([element.textContent, element.parentElement]);
             }
         });
@@ -337,7 +336,7 @@ function KeyboardCheck() {
         
         // If there are no correct words then click the first word in the word bank so it can check
         if (Object.keys(correctWords).length == 0) {
-            GetElementWithClass("_1rl91 WOZnx _275sd _1ZefG notranslate _6Nozy _1O290 _2HRY_ _2N8UY").click();
+            GetElementWithClass("_3CBig _1N-oo _36Vd3 _16r-S notranslate _356DE _25kHK _3U5_i _3AiTr").click();
         }
     }
 }
