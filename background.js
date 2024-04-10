@@ -69,9 +69,20 @@ async function handleRedirects(sources) {
         
         if (text.includes(".push([[2143]")) { // Type 1
             var type1 = src;
-            
+
             const fileName = type1.slice(type1.lastIndexOf('/') + 1);
-            const modifiedContent = text.replace(/{canToggleTyping:!1,isToggledToTyping:!1}/g, "{canToggleTyping:!0,isToggledToTyping:e.typingEnabled}"); // Replace all instances of "{canToggleTyping:!1,isToggledToTyping:!1}" with "{canToggleTyping:!0,isToggledToTyping:e.typingEnabled}"
+            let modifiedContent = text;
+
+            modifiedContent = modifiedContent.replace(/{canToggleTyping:!1,isToggledToTyping:!1}/g, "{canToggleTyping:!0,isToggledToTyping:e.typingEnabled}"); // Replace all instances of "{canToggleTyping:!1,isToggledToTyping:!1}" with "{canToggleTyping:!0,isToggledToTyping:e.typingEnabled}"
+            
+            // Disable heart system >:D
+            const modifyIndex2 = modifiedContent.indexOf('case"UPDATE_HEARTS_STATE":{');
+            const modifyIndex3 = modifiedContent.indexOf('break', modifyIndex2);
+            modifiedContent = modifiedContent.replaceAt(modifyIndex2 + 'case"UPDATE_HEARTS_STATE":{'.length, modifyIndex3, "")
+            
+            const modifyIndex4 = modifiedContent.indexOf('case"DECREMENT_ONE_HEART":{');
+            const modifyIndex5 = modifiedContent.indexOf('break', modifyIndex4);
+            modifiedContent = modifiedContent.replaceAt(modifyIndex4 + 'case"DECREMENT_ONE_HEART":{'.length, modifyIndex5, "")
 
             var modifiedType1 = await uploadToFirebase(fileName, modifiedContent);
         }
@@ -79,7 +90,7 @@ async function handleRedirects(sources) {
             var type2 = src;
             
             const fileName = type2.slice(type2.lastIndexOf('/') + 1);
-            const match = text.matchFrom(/\?"-character":""\)\]\},[a-zA-Z]+\|\|!/, text.indexOf(".Translate]:{Container:")); // Search for “.Translate]:{Container:” and then the first following occurrence of “?"-character":"")]},x||!”
+            const match = text.matchFrom(/\?"-character":""\)\]\},[a-zA-Z]+\|\|!/, text.indexOf(".Translate]:{Container:")); // Search for “.Translate]:{Container:” and then the first following occurrence of “?"-character":"")]},y||!”
             const modifyIndex = match.index;
             const modifyWord = match[0];
             const modifiedContent = text.replaceAt(modifyIndex + modifyWord.length - 4, modifyIndex + modifyWord.length, "!"); // Replace last four characters with !
@@ -87,7 +98,7 @@ async function handleRedirects(sources) {
             var modifiedType2 = await uploadToFirebase(fileName, modifiedContent);
         }
     }
-
+    
     if (modifiedType1 != null && modifiedType2 != null) {
         chrome.declarativeNetRequest.updateDynamicRules({
             removeRuleIds: [1, 2],
@@ -127,8 +138,8 @@ async function handleRedirects(sources) {
 }
 
 async function uploadToFirebase(fileName, content) {
-    const uploadURL = `https://firebasestorage.googleapis.com/v0/b/typelingo.appspot.com/o/${encodeURIComponent(fileName)}`;
-
+    const uploadURL = `https://firebasestorage.googleapis.com/v0/b/typelingo.appspot.com/o/no-hearts-ver%2F${encodeURIComponent(fileName)}`;
+    
     const headers = {
         'Content-Type': 'application/octet-stream',
     };
